@@ -4,8 +4,8 @@
     python3 tools/build_os.py --os ubuntu|macos|windows|all --out build/<os>
 
 What it does, in order:
-  1. copies the authored tree (student/, trainer/, env/, README-*.md, the blueprint
-     and manifest) into --out;
+  1. copies the course tree (pages, env, tools, labs, logsleuth, seed, program and the
+     top-level scripts) into --out;
   2. resolves <!-- os:X Y --> … <!-- /os --> blocks in every .md file: the block
      body is kept when the target OS is listed (or for 'all'), otherwise removed;
      the marker lines themselves never survive;
@@ -31,7 +31,8 @@ EDITIONS = {
     "all":     ("all-platform master", "all"),
 }
 COPY = ["student", "trainer", "env", "README-STUDENT.md", "README-TRAINER.md",
-        "00-BRIEF-AND-BLUEPRINT.md", "CONTINUATION-MANIFEST.md", "tools"]
+        "BLUEPRINT.md", "CONTINUATION-MANIFEST.md", "tools",
+        "labs", "logsleuth", "seed", "program", "tools-check.sh", "grade-all.sh", "prove_all.sh"]
 MARK = re.compile(r"^<!-- os:([a-z ]+?) -->\n(.*?)^<!-- /os -->\n", re.S | re.M)
 INLINE = re.compile(r"<!-- os:([a-z ]+?) -->(.*?)<!-- /os -->", re.S)
 
@@ -59,7 +60,8 @@ def main():
         (shutil.copytree if os.path.isdir(src) else shutil.copy2)(src, dst)
 
     # 2. markers
-    for dp, _, fns in os.walk(out):
+    for dp, dns, fns in os.walk(out):
+        dns[:] = [d for d in dns if d not in ("labs", "logsleuth", "seed", "program")]  # markers live in the pages only
         for fn in fns:
             if fn.endswith(".md"):
                 p = os.path.join(dp, fn)

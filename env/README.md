@@ -61,26 +61,26 @@ image pulls/builds, and the ability to run commands as administrator on your own
 
 ## 1. Get the course files
 
-1. Download `bash-course-v2-student.zip` from your course area (Moodle) to your computer.
+1. Download `bash-course-student.zip` from your course area (Moodle) to your computer.
 <!-- os:all -->
 2. Create one folder for the program and unzip there (on Windows: in the Ubuntu shell; `~/` is your Linux home, not `C:\Users`):
    ```bash
    mkdir -p ~/secmlops && cd ~/secmlops
-   unzip ~/Downloads/bash-course-v2-student.zip      # wherever the browser saved it
-   cd ~/secmlops/bash-course-v2-student
+   unzip ~/Downloads/bash-course-student.zip      # wherever the browser saved it
+   cd ~/secmlops/bash-course-student
    ls
    ```
    **Expected:** `README.md  env  grade-all.sh  labs  logsleuth  seed  student  tools-check.sh`.
    On WSL 2 the Windows Downloads folder is reachable as `/mnt/c/Users/<you>/Downloads/`;
-   copy the zip into `~/secmlops` first (`cp /mnt/c/Users/<you>/Downloads/bash-course-v2-student.zip ~/secmlops/`)
+   copy the zip into `~/secmlops` first (`cp /mnt/c/Users/<you>/Downloads/bash-course-student.zip ~/secmlops/`)
    — working under `/mnt/c` is slow and breaks file permissions.
 <!-- /os -->
 <!-- os:ubuntu macos -->
 2. Create one folder for the program and unzip there (`~/` is your home folder):
    ```bash
    mkdir -p ~/secmlops && cd ~/secmlops
-   unzip ~/Downloads/bash-course-v2-student.zip      # wherever the browser saved it
-   cd ~/secmlops/bash-course-v2-student
+   unzip ~/Downloads/bash-course-student.zip      # wherever the browser saved it
+   cd ~/secmlops/bash-course-student
    ls
    ```
    **Expected:** `README.md  env  grade-all.sh  labs  logsleuth  seed  student  tools-check.sh`.
@@ -89,9 +89,9 @@ image pulls/builds, and the ability to run commands as administrator on your own
 2. **Do section 4a first** if you have not yet installed WSL — the rest of this section happens in the Ubuntu window. Create one folder for the program and unzip there (`~/` is your Linux home, not `C:\Users`):
    ```bash
    mkdir -p ~/secmlops && cd ~/secmlops
-   cp /mnt/c/Users/<you>/Downloads/bash-course-v2-student.zip ~/secmlops/     # <you> = your Windows user name
-   unzip bash-course-v2-student.zip
-   cd ~/secmlops/bash-course-v2-student
+   cp /mnt/c/Users/<you>/Downloads/bash-course-student.zip ~/secmlops/     # <you> = your Windows user name
+   unzip bash-course-student.zip
+   cd ~/secmlops/bash-course-student
    ls
    ```
    **Expected:** `README.md  env  grade-all.sh  labs  logsleuth  seed  student  tools-check.sh`. The Windows Downloads folder is reachable from Ubuntu as `/mnt/c/Users/<you>/Downloads/`; always copy the zip into `~/secmlops` first — working under `/mnt/c` is slow and breaks file permissions.
@@ -103,7 +103,7 @@ image pulls/builds, and the ability to run commands as administrator on your own
 3. `unzip` is built into macOS (double-clicking the zip in Finder also works).
 <!-- /os -->
 
-From here on, "the course folder" means `~/secmlops/bash-course-v2-student`. Every command
+From here on, "the course folder" means `~/secmlops/bash-course-student`. Every command
 in this page is run from there unless it says otherwise.
 
 ---
@@ -367,7 +367,7 @@ docker run --rm hello-world
 From the course folder:
 
 ```bash
-cd ~/secmlops/bash-course-v2-student
+cd ~/secmlops/bash-course-student
 docker build -t bash-course:2.0 env/
 ```
 
@@ -393,7 +393,7 @@ report it with the full output.
 ## 7. Start a lab session (every time you study)
 
 ```bash
-cd ~/secmlops/bash-course-v2-student
+cd ~/secmlops/bash-course-student
 docker run --rm -it -v "$PWD":/course -w /course bash-course:2.0
 ```
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # leakcheck.sh — release gate for the Student Edition archive.
-#   bash tools/leakcheck.sh dist/bash-course-v2-student.zip
+#   bash tools/leakcheck.sh dist/bash-course-student.zip
 # Exit 0 only when nothing trainer-only, no scratch state and no digest is inside.
 set -euo pipefail
 zip="${1:?usage: leakcheck.sh STUDENT.zip}"
@@ -9,8 +9,8 @@ say() { printf '  %s\n' "$*"; }
 listing="$(unzip -Z1 "$zip")"
 
 echo "== forbidden paths =="
-for pat in '/solution/' 'labs/capstone/lab.sh' '/trainer/' 'callouts' 'a10r' 'CONTINUATION-MANIFEST' '00-BRIEF-AND-BLUEPRINT' \
-           'README-TRAINER' 'prove_all.sh' '/work/' '/.render/' '.lock' '__pycache__' '/course-content/'; do
+for pat in '/solution/' 'labs/capstone/lab.sh' '/trainer/' 'callouts' 'a10r' 'CONTINUATION-MANIFEST' 'BLUEPRINT.md' \
+           'README-TRAINER' 'prove_all.sh' '/work/' '/.render/' '.lock' '__pycache__'; do
   if hits="$(grep -F -- "$pat" <<<"$listing")"; then say "LEAK  $pat"; printf '        %s\n' "$hits" | head -5; fail=1; else say "ok    no $pat"; fi
 done
 

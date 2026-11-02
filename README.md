@@ -1,35 +1,47 @@
 # Bash Scripting — zero to hero, project-based
 
-This is the source of the Bash Scripting course (Course 0 of the SecMLOps program).
+Course 0 of the SecMLOps program. You learn bash by building one real tool, `logsleuth`, which
+analyses the logs of the program's fraud-detection API, and you finish by running that API on your
+own laptop with a second tool you write, `stackctl`.
 
-The repository is **private** because it contains the answers: reference solutions, grading
-keys and trainer notes. Learners never get this repository. They get **zip archives** that are
-built from it, and a check (`tools/leakcheck.sh`) makes sure the student archives contain no answers.
+This repository is the **source of the course**: lessons, labs, graders, solutions and build tools,
+all in one tree. It is **private** because it contains the answers. Learners never get this
+repository; they get a zip archive built from it, and `tools/leakcheck.sh` guarantees the student
+archives contain no answers.
 
-## The two folders
+The same course is published in Notion under *SecMLOps Program → Bash Scripting*, as a Student
+tree and a Trainer tree. Notion and this repository hold the same content; Moodle enrollment is the
+access control.
 
-The course is split in two folders. Together they make one course.
+## The tree
 
-| Folder | Contains | In one sentence |
-| --- | --- | --- |
-| `bash-course-v2/` | The **lessons** (text) and the build tools | What the learner **reads** |
-| `bash-course/` | The **labs**, their graders, the course project, and the proof suite | What the learner **runs** |
+```
+.
+├── README.md                 this file
+├── README-STUDENT.md         the README learners see at the root of their archive
+├── README-TRAINER.md         the README trainers see at the root of theirs
+├── student/                  the twelve lesson pages — the master copy of the course text
+├── trainer/                  the same pages with TRAINER ONLY boxes (generated from student/ + callouts/)
+│   ├── callouts/             the trainer notes, one file per module — edit these, not trainer/*.md
+│   └── a10r/                 the A-10R reassessment kit
+├── env/                      the course Docker image and the step-by-step setup guide
+├── labs/                     one folder per lab: a demonstration, the exercise, its grader, its solution
+├── logsleuth/                the course project, finished
+├── program/                  real Course 1 / Course 2 scripts, read-only, for "read the real thing" exercises
+├── seed/                     the log-file generator the labs use
+├── tools/                    build tools: trainer pages, platform editions, archives, leak check
+├── tools-check.sh            is this shell ready?                      (learners run it)
+├── grade-all.sh              grade every lab at once                   (learners run it)
+├── prove_all.sh              prove the whole course still works        (trainers and authors)
+├── BLUEPRINT.md              the course design                         (trainer-only)
+└── CONTINUATION-MANIFEST.md  the logbook of every change               (trainer-only; read first when maintaining)
+```
 
-## Where the labs are
+## Lessons and labs
 
-**In this repository, every lab is under `bash-course/labs/`.** There are no labs inside
-`bash-course-v2/`; that folder holds only the lesson text, which refers to the labs.
+Each lesson page in `student/` has one lab in `labs/`:
 
-**In a built archive, the labs are at `labs/`** at the top of the archive, because the build copies
-the whole `bash-course/` folder into the archive next to the lesson pages. So when a lesson page says
-`labs/lab5-text-processing/exercise/`, that means:
-
-- `bash-course/labs/lab5-text-processing/exercise/` in this repository, and
-- `labs/lab5-text-processing/exercise/` in the archive a learner has.
-
-Which lesson uses which lab:
-
-| Lesson page (in `bash-course-v2/student/`) | Lab folder (in `bash-course/labs/`) | Graded as |
+| Lesson page | Lab folder | Graded as |
 | --- | --- | --- |
 | `M00-orientation-and-first-script.md` | `lab0-first-script/` | A-01 |
 | `M01-variables-and-parameter-expansion.md` | `lab1-variables/` | A-02 |
@@ -47,145 +59,71 @@ Which lesson uses which lab:
 Every lab folder has the same layout:
 
 ```
-bash-course/labs/lab5-text-processing/
+labs/lab5-text-processing/
 ├── lab.sh                  the module's demonstration: run it and watch the concepts work
 └── exercise/
     ├── TASK.md             the graded exercise
     ├── grade.sh            the grader
     ├── starter/            the files with # TODOs
-    ├── work/               created by grade.sh on first run — this is where the learner edits
+    ├── work/               created by grade.sh on first run — where the learner edits
     └── solution/           the reference solution (trainer archive only)
 ```
 
----
+## I am a learner
 
-## I am a learner — how do I use this?
-
-You should be using a zip archive, not this repository. Inside the archive:
-
-1. Open `README-STUDENT.md`.
-2. Follow the pages in `student/` in order: `M00`, `M01` … `M08`, `A10`, `M09`, `CAP01`.
-3. Each page has a lab. In the archive the labs are in `labs/` (the table above says which lab
-   belongs to which page). For example, module 5 uses `labs/lab5-text-processing/`:
+Use the zip archive from your course area, not this repository. Then follow `README-STUDENT.md`
+inside it: set up the environment with `env/README.md`, read the pages in `student/` in order, and
+do each page's lab:
 
 ```bash
-bash tools-check.sh                             # 1. Is my shell ready?
-bash labs/lab5-text-processing/lab.sh           # 2. Watch the module's demo run. It ends with "20 passed, 0 failed".
+bash tools-check.sh                             # is my shell ready?
+bash labs/lab5-text-processing/lab.sh           # the demonstration; ends with "20 passed, 0 failed"
 cd labs/lab5-text-processing/exercise
-bash grade.sh                                   # 3. First run: creates work/ from starter/ and shows what fails.
-#    Edit the files in work/ until...
-bash grade.sh                                   # 4. ---- lab5: 5 passed, 0 failed ----
+bash grade.sh                                   # first run creates work/ from starter/ and shows what fails
+#   edit the files in work/ ...
+bash grade.sh                                   # ---- lab5: 5 passed, 0 failed ----
 ```
 
-`bash grade-all.sh` (at the top of the archive) grades every lab at once.
+## I am a trainer
 
----
+Use the **trainer** archive. It is the student archive plus `trainer/` (the lesson pages with
+teaching notes, solutions, grading descriptors and knowledge-check answers), every lab's
+`solution/`, `prove_all.sh`, `BLUEPRINT.md` and `CONTINUATION-MANIFEST.md`. `README-TRAINER.md`
+lists what to do before a first cohort.
 
-## I am a trainer — how do I use this?
+## I am an author
 
-Use the **trainer** zip archive. It has everything the student archive has, plus:
-
-- `trainer/` — every lesson page again, with orange **TRAINER ONLY** boxes: teaching notes,
-  the complete solution, how to grade, and the answers to the knowledge checks.
-- `labs/*/exercise/solution/` — the reference solution for every lab.
-- `prove_all.sh` — runs every lab and every grader to prove the course still works.
-- `00-BRIEF-AND-BLUEPRINT.md` — the course design (skills, assessment plan, open verification tasks).
-
----
-
-## I am an author — how do I change the course?
-
-### Changing a lesson
-
-1. Edit the page in `bash-course-v2/student/`. That is the only copy of the student text.
-2. Trainer notes go in `bash-course-v2/trainer/callouts/` (one file per module), never in `student/`.
-3. Rebuild the trainer page from those two files:
+**Change a lesson.** Edit the page in `student/` (the only copy of the student text) and, if needed,
+the trainer notes in `trainer/callouts/`. Rebuild the trainer page:
 
 ```bash
-cd bash-course-v2
 python3 tools/merge_trainer.py student/M05-text-pipelines.md trainer/callouts/M05.callouts.md > trainer/M05-text-pipelines.md
 ```
 
-(`M00` is the exception: it is edited by hand in both `student/` and `trainer/`.)
+`M00` is the exception: it is edited by hand in both `student/` and `trainer/`. Every output a page
+shows as **observed** must really have been observed — run the command and paste what it printed.
 
-4. Every command output shown on a page as **observed** must really have been observed. Run the
-   command and paste what it printed.
-
-### Changing a lab
-
-Labs are in `bash-course/labs/` (see the table above). Change these four things together, in
-`bash-course/labs/<lab>/exercise/`:
-`starter/` (what the learner gets), `solution/` (the answer), `grade.sh` (the grader), and the
-matching page in `bash-course-v2/student/`. Then prove it:
+**Change a lab.** Change `starter/`, `solution/`, `grade.sh` and the lesson page together, then prove it:
 
 ```bash
-cd bash-course && bash prove_all.sh             # must end with: ALL GREEN
+bash prove_all.sh                               # must end with: ALL GREEN
 ```
 
-### Building the archives
+**Build the archives.**
 
 ```bash
-cd bash-course-v2 && bash tools/package-all.sh
-ls dist/
+bash tools/package-all.sh                       # → dist/bash-course-{student,trainer}{,-ubuntu,-macos,-windows}.zip
 ```
 
-This produces eight archives: `student` and `trainer`, each in four versions — the all-platform
-master, Ubuntu, macOS and Windows 11. Every student archive is leak-checked.
+Eight archives: Student and Trainer, each as the all-platform master and three platform editions
+(Ubuntu/Debian, macOS, Windows 11 via WSL 2 Ubuntu). The platform editions are generated — never
+edit them. Platform-specific text goes in the master pages inside `<!-- os:ubuntu macos -->` …
+`<!-- /os -->` blocks, or in `tools/os-variants.json`. `dist/` and `build/` are not committed.
 
-The platform versions are **generated**; do not edit them. Platform-specific text is written in the
-master pages inside `<!-- os:ubuntu macos -->` … `<!-- /os -->` blocks, or in `tools/os-variants.json`.
+**Record the change** in `CONTINUATION-MANIFEST.md`, and republish the changed Notion pages
+(the page IDs and the publishing method are in the manifest).
 
-### Recording your change
+## Related repositories
 
-Write what you did in `bash-course-v2/CONTINUATION-MANIFEST.md`. It is the course's logbook:
-every change so far, every decision, every correction, and the IDs of the Notion pages to republish.
-
----
-
-## What is in `bash-course-v2/`
-
-| Path | What it is |
-| --- | --- |
-| `student/` | The twelve lesson pages: `M00`–`M08` (core bash), `A10` (integrative practical), `M09` (infrastructure from bash: `stackctl`), `CAP01` (capstone). **The master copy of the course text.** |
-| `trainer/` | The same twelve pages with trainer-only boxes added. **Generated** from `student/` + `trainer/callouts/`. |
-| `trainer/callouts/` | The trainer notes, one file per module. **Edit these, not `trainer/*.md`.** |
-| `trainer/a10r/` | The reassessment kit for A-10 (a second, equivalent exam). |
-| `env/Dockerfile`, `env/README.md` | The learner's Docker image and the step-by-step setup guide for Ubuntu, macOS and Windows 11. |
-| `README-STUDENT.md`, `README-TRAINER.md` | The README placed at the root of each archive. |
-| `00-BRIEF-AND-BLUEPRINT.md` | The course design document. Trainer-only. |
-| `CONTINUATION-MANIFEST.md` | The logbook. Trainer-only. Read it first when maintaining the course. |
-| `tools/merge_trainer.py` | Builds a trainer page from a student page and its callouts. |
-| `tools/build_os.py`, `tools/os-variants.json` | Build one platform version from the master. |
-| `tools/package.sh`, `tools/package-all.sh` | Build the zip archives. |
-| `tools/leakcheck.sh` | Fails if a student archive contains trainer material. |
-
-## What is in `bash-course/`
-
-| Path | What it is | Who sees it |
-| --- | --- | --- |
-| `labs/lab0-first-script/` … `labs/lab8-testing/` | One folder per core module. | everyone |
-| `labs/lab9-stackctl/`, `labs/capstone/` | The M09 lab and the A-10 capstone. | everyone (except `capstone/lab.sh`, trainer-only) |
-| `labs/<lab>/lab.sh` | The module's worked demonstration. Runs the concepts and checks the results. | everyone |
-| `labs/<lab>/exercise/TASK.md` | The graded exercise. | everyone |
-| `labs/<lab>/exercise/starter/` | The files with `# TODO`s. The learner completes a copy in `work/`. | everyone |
-| `labs/<lab>/exercise/grade.sh` | The grader. | everyone |
-| `labs/<lab>/exercise/solution/` | The reference solution. | **trainer only** |
-| `labs/lab9-stackctl/exercise/*/app/` | The fraud-clf application from Course 2, unchanged. `stackctl` runs it. Learners must not modify it. | everyone |
-| `logsleuth/` | The course project in its finished form: a log-analysis command-line tool with a library, tests, a config file, a man page and an installer. Modules 1–8 build toward it. | everyone |
-| `program/` | Real scripts from Course 1 and Course 2, copied here read-only so that lessons can say "open the real thing". `program/README.md` lists where each comes from. | everyone |
-| `seed/make_logs.sh` | Generates the log files the labs analyse. Same output every time, so graders are reliable. | everyone |
-| `tools-check.sh` | Checks that the shell has what the course needs. | everyone |
-| `grade-all.sh` | Runs every lab's grader. | everyone |
-| `prove_all.sh` | Runs every demo, every grader on starter and solution, the `logsleuth` tests and shellcheck. | **trainer only** |
-| `course-content/` | The lesson pages of the **old version 1** of the course. Kept only because the old Notion pages link to them. Not used by version 2. | — |
-
----
-
-## Where the course is published
-
-- **Notion:** a Student tree and a Trainer tree under *SecMLOps Program → Bash Scripting*, each in a
-  master and three platform copies. The Student trees are what gets copied into MoodleCloud.
-  Moodle enrollment is the access control, not Notion sharing.
-- **Archives:** built from this repository with `tools/package-all.sh` (`dist/` is not committed).
-- **Program repositories this course reads from:** `antgonto/secmlops-infra` (Course 1),
-  `antgonto/secmlops-app` and `antgonto/secmlops-project-{github,gitlab,azure}` (Course 2).
+The scripts in `program/` come from `antgonto/secmlops-infra` (Course 1) and
+`antgonto/secmlops-app` / `antgonto/secmlops-project-{github,gitlab,azure}` (Course 2).

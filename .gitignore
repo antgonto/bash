@@ -1,4 +1,5 @@
-bash-course-v2/dist/
-bash-course-v2/build/
+dist/
+build/
 *.zip
 __pycache__/
+labs/*/exercise/work/
