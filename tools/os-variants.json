@@ -233,5 +233,17 @@
    "windows": "> prints the exact lines passes the output checks; use R1 to make the learner justify\n> or change it. A file with CRLF endings fails the shebang check too (the first line is\n> `#!/usr/bin/env bash\\r`) — the diagnosis is `cat -A`, not a rewrite."
   }
  ],
- "regex_variants": []
+ "regex_variants": [
+  {
+   "comment": "the per-OS archive unzips to bash-course-student-<os>/ — name it that way in the setup guide",
+   "files": [
+    "env/README.md",
+    "README-STUDENT.md"
+   ],
+   "pattern": "bash-course-student(?![-\\w])",
+   "ubuntu": "bash-course-student-ubuntu",
+   "macos": "bash-course-student-macos",
+   "windows": "bash-course-student-windows"
+  }
+ ]
 }

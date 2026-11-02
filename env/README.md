@@ -20,6 +20,12 @@ Windows every command in this course is typed in the Ubuntu shell, never in Powe
 PowerShell is used exactly once, to install WSL. *(Windows 11 support added 2026-10-21;
 before that the course was published for macOS and Ubuntu only.)*
 
+> **You are reading the all-platform master.** Where a step differs by operating system, this
+> page shows every variant one after the other — the Ubuntu/Debian one, then the macOS one,
+> then the Windows 11 one — which is why some step numbers and table rows appear more than once.
+> Learners should use the page for their own platform (the Ubuntu/Debian, macOS and Windows 11
+> editions), which carries only its variant. Authors edit this master; the editions are generated.
+
 <!-- /os -->
 <!-- os:ubuntu -->
 **This is the Ubuntu/Debian edition** (Ubuntu 22.04+ or Debian 12). The macOS and Windows 11 editions are separate downloads with the same content; the program's host-OS list is the same across Courses 0, 1 and 2.
