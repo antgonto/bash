@@ -1,0 +1,32 @@
+# Rendered by stackctl from envs/<env>.conf — do not edit the rendered copy.
+# The fraud-clf serving stack: `serve` (the program's FastAPI model service,
+# built from APP_DIR with Dockerfile.course) behind `gateway` (nginx), which is
+# the only published port. Compose builds the serve image if it is missing.
+services:
+  gateway:
+    image: "@IMAGE_GATEWAY@"
+    ports:
+      - "127.0.0.1:@PORT@:80"
+    volumes:
+      - "@RENDER_DIR@/gateway.conf:/etc/nginx/conf.d/default.conf:ro"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1@HEALTH_PATH@"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+    depends_on:
+      serve:
+        condition: service_healthy
+  serve:
+    image: "@IMAGE_SERVE@"
+    build:
+      context: "@APP_DIR@"
+      dockerfile: Dockerfile.course
+    expose:
+      - "8080"
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8080@HEALTH_PATH@', timeout=2).status == 200 else 1)"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+      start_period: 5s

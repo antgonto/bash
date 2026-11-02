@@ -1,0 +1,11 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": { "driver": { "name": "testssl.sh", "version": "3.2" } },
+      "results": [
+        { "ruleId": "cipher-order", "level": "warning", "message": { "text": "server does not enforce cipher order" } }
+      ]
+    }
+  ]
+}

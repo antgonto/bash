@@ -1,0 +1,13 @@
+# Dockerfile.course — Course 0's build recipe for the fraud-clf baseline, kept
+# NEXT TO the inherited Dockerfile rather than replacing it. The inherited one
+# expects a trained model/model.pkl in the build context (Course 2 Module 0
+# trains it on the laptop first); this one trains inside the build so the
+# image is self-contained for stackctl. Nothing else about the app is changed.
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+RUN mkdir -p model && python gen_data.py && python clean.py && python train.py
+EXPOSE 8080
+CMD ["uvicorn", "src.serve:app", "--host", "0.0.0.0", "--port", "8080"]

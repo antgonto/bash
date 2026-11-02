@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Capstone solution — mytool: a tiny line-analyzer that scores every row of the
+# rubric logsleuth meets (strict mode, usage, getopts, case dispatch, file-or-
+# stdin, distinct exit codes, a cleanup trap).
+set -euo pipefail
+PROG="mytool"
+
+tmp="$(mktemp "${TMPDIR:-/tmp}/$PROG.XXXXXX")"
+# shellcheck disable=SC2154  # rc is assigned inside the trap string, then used
+trap 'rc=$?; rm -f "$tmp"; exit "$rc"' EXIT INT TERM
+
+usage() {
+  cat <<EOF
+usage: $PROG [-n N] <count|top> [FILE]
+  count        number of lines (FILE or stdin)
+  top          the most frequent line(s)
+  -n N         for 'top', show the top N (default 1)
+EOF
+}
+
+n=1
+while getopts ":n:h" opt; do
+  case "$opt" in
+    n)  n="$OPTARG" ;;
+    h)  usage; exit 0 ;;
+    :)  printf '%s: -%s needs an argument\n' "$PROG" "$OPTARG" >&2; exit 2 ;;
+    \?) printf '%s: unknown option -%s\n' "$PROG" "$OPTARG" >&2; exit 2 ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+[[ $# -ge 1 ]] || { usage >&2; exit 2; }
+cmd="$1"; shift
+
+# read FILE-or-stdin into the temp file
+if [[ $# -ge 1 ]]; then
+  [[ -r "$1" ]] || { printf '%s: cannot read file: %s\n' "$PROG" "$1" >&2; exit 1; }
+  cat -- "$1" > "$tmp"
+else
+  cat > "$tmp"
+fi
+
+case "$cmd" in
+  count) wc -l < "$tmp" | tr -d ' ' ;;
+  top)   sort "$tmp" | uniq -c | sort -rn | head -n "$n" | sed 's/^ *[0-9]* //' ;;
+  *)     printf '%s: unknown command: %s\n' "$PROG" "$cmd" >&2; exit 2 ;;
+esac

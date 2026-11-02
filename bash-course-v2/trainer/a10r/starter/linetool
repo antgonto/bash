@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# A-10R — linetool: a tiny line-analyzer. Build it to the contract below; there
+# are no line-by-line hints this time — use the idioms you practiced in M06–M08.
+#
+#   linetool lines [FILE]        number of lines (FILE or stdin)
+#   linetool [-k N] freq [FILE]  the N most frequent line(s) (default 1)
+#   linetool -h                  usage (to stdout), exit 0
+#
+#   exit codes: 0 ok · 3 unreadable file · 4 usage error / unknown command
+#   required: strict mode, a code-preserving cleanup trap, getopts, case dispatch,
+#             FILE-or-stdin, shellcheck-clean
+set -euo pipefail
+PROG="linetool"
+
+printf 'FIXME\n'

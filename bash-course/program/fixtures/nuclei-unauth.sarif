@@ -1,0 +1,16 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": { "driver": { "name": "nuclei", "version": "3.3.0" } },
+      "results": [
+        { "ruleId": "tls-version", "level": "warning", "message": { "text": "TLS 1.1 enabled" },
+          "locations": [ { "physicalLocation": { "artifactLocation": { "uri": "https://staging.secmlops.com" } } } ] },
+        { "ruleId": "exposed-docs", "level": "note", "message": { "text": "OpenAPI docs exposed at /docs" },
+          "locations": [ { "physicalLocation": { "artifactLocation": { "uri": "https://staging.secmlops.com/docs" } } } ] },
+        { "ruleId": "unauth-predict", "level": "error", "message": { "text": "POST /api/predict answers without authentication" },
+          "locations": [ { "physicalLocation": { "artifactLocation": { "uri": "https://staging.secmlops.com/api/predict" } } } ] }
+      ]
+    }
+  ]
+}

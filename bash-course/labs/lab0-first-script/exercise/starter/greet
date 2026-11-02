@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Lab 0 exercise — your first script. Complete the TODOs, then run ../grade.sh
+# (Part 0 of the lessons walks through each of these steps.)
+
+# TODO: add the strict-mode header on the two lines below:
+#   set -euo pipefail
+#   IFS=$'\n\t'
+
+# TODO: read the first argument into name, defaulting to "world":
+#   name="${1:-world}"
+name="FIXME"
+
+# TODO: print  Hello, <name>!  using printf and a real newline:
+#   printf 'Hello, %s!\n' "$name"
+printf 'FIXME\n'

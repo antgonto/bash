@@ -1,0 +1,6 @@
+{"count": 3, "next": null, "previous": null,
+ "results": [
+   {"id": 101, "title": "requests 2.19.1 — CVE-2018-18074", "severity": "High",   "status": "Open"},
+   {"id": 102, "title": "Hard-coded AWS key in config.py",   "severity": "High",   "status": "Open"},
+   {"id": 103, "title": "Image runs as root",               "severity": "Medium", "status": "Open"}
+ ]}

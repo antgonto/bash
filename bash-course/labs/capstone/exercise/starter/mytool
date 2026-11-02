@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Capstone exercise — mytool: a tiny line-analyzer you assemble from everything
+# the course taught. Fill every TODO so it meets the rubric, then run ../grade.sh
+#
+# The finished tool must:
+#   - run under strict mode with a usage() and a temp-file cleanup trap
+#   - parse -n N (default 1) and -h with getopts
+#   - take a subcommand (count|top) and a FILE-or-stdin
+#   - use distinct exit codes: 0 ok, 1 unreadable file, 2 usage/unknown command
+set -euo pipefail
+PROG="mytool"
+
+tmp="$(mktemp "${TMPDIR:-/tmp}/$PROG.XXXXXX")"
+# TODO: add a cleanup trap that removes "$tmp" and preserves the exit code:
+# shellcheck disable=SC2154  # (keep this; rc is assigned inside the trap)
+#   trap 'rc=$?; rm -f "$tmp"; exit "$rc"' EXIT INT TERM
+
+usage() {
+  # TODO: print a short usage message (see the header above) to stdout.
+  printf 'usage: %s ...\n' "$PROG"
+}
+
+n=1
+# TODO: parse options with  while getopts ":n:h" opt; do case ... esac; done
+#   n) n="$OPTARG" ;;  h) usage; exit 0 ;;
+#   :) ... >&2; exit 2 ;;  \?) ... >&2; exit 2 ;;
+# then: shift $((OPTIND - 1))
+
+# TODO: require at least a subcommand, else  usage >&2; exit 2
+cmd="${1:-}"; shift || true
+
+# TODO: read FILE-or-stdin into "$tmp":
+#   if a FILE arg is given, verify it is readable (else exit 1) and cat it in;
+#   otherwise cat stdin into "$tmp".
+cat /dev/null > "$tmp"
+
+# TODO: dispatch with case "$cmd":
+#   count) wc -l < "$tmp" | tr -d ' ' ;;
+#   top)   sort "$tmp" | uniq -c | sort -rn | head -n "$n" | sed 's/^ *[0-9]* //' ;;
+#   *)     message >&2; exit 2 ;;
+printf 'FIXME\n'

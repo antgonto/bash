@@ -1,0 +1,10 @@
+{
+  "payloadType": "application/vnd.in-toto+json",
+  "payload": "eyJfdHlwZSI6ICJodHRwczovL2luLXRvdG8uaW8vU3RhdGVtZW50L3YxIiwgInN1YmplY3QiOiBbeyJuYW1lIjogImhhcmJvci5zZWNtbG9wcy5jb20vbWxvcHMvc2VydmUiLCAiZGlnZXN0IjogeyJzaGEyNTYiOiAiM2Y3ODY4NTBlMzg3NTUwZmRhYjgzNmVkN2U2ZGM4ODFlMWI1ZDBkMWU4ZTRmNmYwZDlkN2JiMGIxYzJkM2U0ZiJ9fV0sICJwcmVkaWNhdGVUeXBlIjogImh0dHBzOi8vY3ljbG9uZWR4Lm9yZy9ib20iLCAicHJlZGljYXRlIjogeyJjb21wb25lbnRzIjogW3sidHlwZSI6ICJsaWJyYXJ5IiwgIm5hbWUiOiAiZmFzdGFwaSIsICJ2ZXJzaW9uIjogIjAuMTE1LjAifSwgeyJ0eXBlIjogImxpYnJhcnkiLCAibmFtZSI6ICJudW1weSIsICJ2ZXJzaW9uIjogIjIuMS4xIn0sIHsidHlwZSI6ICJtYWNoaW5lLWxlYXJuaW5nLW1vZGVsIiwgIm5hbWUiOiAiZnJhdWQtY2xmIn1dfX0=",
+  "signatures": [
+    {
+      "keyid": "",
+      "sig": "MEUCIQD\u2026course-authored-sample\u2026"
+    }
+  ]
+}

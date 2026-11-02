@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# A-10R reference solution (TRAINER ONLY) — linetool.
+set -euo pipefail
+PROG="linetool"
+
+tmp="$(mktemp "${TMPDIR:-/tmp}/$PROG.XXXXXX")"
+# shellcheck disable=SC2154  # rc is assigned inside the trap string, then used
+trap 'rc=$?; rm -f "$tmp"; exit "$rc"' EXIT INT TERM
+
+usage() {
+  cat <<USAGE
+usage: $PROG [-k N] <lines|freq> [FILE]
+  lines        number of lines (FILE or stdin)
+  freq         the most frequent line(s)
+  -k N         for 'freq', show the top N (default 1)
+USAGE
+}
+
+k=1
+while getopts ":k:h" opt; do
+  case "$opt" in
+    k)  k="$OPTARG" ;;
+    h)  usage; exit 0 ;;
+    :)  printf '%s: -%s needs an argument\n' "$PROG" "$OPTARG" >&2; exit 4 ;;
+    \?) printf '%s: unknown option -%s\n' "$PROG" "$OPTARG" >&2; exit 4 ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+[[ $# -ge 1 ]] || { usage >&2; exit 4; }
+cmd="$1"; shift
+
+if [[ $# -ge 1 ]]; then
+  [[ -r "$1" ]] || { printf '%s: cannot read file: %s\n' "$PROG" "$1" >&2; exit 3; }
+  cat -- "$1" > "$tmp"
+else
+  cat > "$tmp"
+fi
+
+case "$cmd" in
+  lines) wc -l < "$tmp" | tr -d ' ' ;;
+  freq)  sort "$tmp" | uniq -c | sort -rn | head -n "$k" | sed 's/^ *[0-9]* //' ;;
+  *)     printf '%s: unknown command: %s\n' "$PROG" "$cmd" >&2; exit 4 ;;
+esac

@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# stackctl — manage the fraud-clf serving stack (serve + gateway) per environment,
+# the infrastructure-as-code way: config is data, validate → plan → apply,
+# re-running converges, destroying needs an explicit confirmation.
+#
+# usage: stackctl [-e ENV] COMMAND        (ENV defaults to test)
+# exit:  0 ok · 1 runtime error · 2 usage or validation error · 3 check failed
+set -euo pipefail
+IFS=$'\n\t'
+
+PROG=stackctl
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export ROOT PROG
+
+# shellcheck source=../lib/driver.sh
+source "$ROOT/lib/driver.sh"
+# shellcheck source=../lib/config.sh
+source "$ROOT/lib/config.sh"
+# shellcheck source=../lib/ops.sh
+source "$ROOT/lib/ops.sh"
+
+usage() {
+  cat <<USAGE
+usage: $PROG [-e ENV] COMMAND
+
+  -e ENV      environment name; reads envs/ENV.conf (default: test)
+  -h          this help
+
+commands:
+  help        show this help
+  validate    parse and check envs/ENV.conf and render the compose file; changes nothing
+  plan        show desired vs applied vs running state and what 'up' would do; changes nothing
+  up          validate, then bring the stack up and wait until healthy (re-running converges)
+  check       GET HEALTH_PATH through the gateway and require the exact HEALTH_BODY (exit 3 on mismatch)
+  status      services currently running in this environment's project
+  logs        recent logs of this environment's project
+  destroy     remove the project's containers, network and volumes;
+              refuses unless CONFIRM_DESTROY=ENV is set
+
+exit codes: 0 ok · 1 runtime error · 2 usage/validation error · 3 check failed
+USAGE
+}
+
+# temp space for renders that must not outlive this run; code-preserving cleanup
+WORK="$(mktemp -d "${TMPDIR:-/tmp}/$PROG.XXXXXX")"
+export WORK
+# shellcheck disable=SC2154  # rc is assigned inside the trap string
+trap 'rc=$?; rm -rf "$WORK"; exit "$rc"' EXIT INT TERM
+
+ENV_NAME="test"
+while getopts ":e:h" opt; do
+  case "$opt" in
+    e) ENV_NAME="$OPTARG" ;;
+    h) usage; exit 0 ;;
+    :) err "option -$OPTARG needs a value"; usage >&2; exit 2 ;;
+    \?) err "unknown option -$OPTARG"; usage >&2; exit 2 ;;
+  esac
+done
+shift $(( OPTIND - 1 ))
+
+[[ $# -eq 1 ]] || { usage >&2; exit 2; }
+cmd="$1"
+[[ "$ENV_NAME" =~ ^[a-z][a-z0-9-]*$ ]] || { err "bad environment name: $ENV_NAME"; exit 2; }
+CONF_FILE="$ROOT/envs/$ENV_NAME.conf"
+export ENV_NAME CONF_FILE
+
+declare -A CONF
+
+case "$cmd" in
+  help)     usage; exit 0 ;;
+  validate) cmd_validate ;;
+  plan)     cmd_validate >/dev/null; cmd_plan ;;
+  up)       cmd_validate >/dev/null; with_lock cmd_up ;;
+  check)    cmd_validate >/dev/null; cmd_check ;;
+  status)   cmd_validate >/dev/null; cmd_status ;;
+  logs)     cmd_validate >/dev/null; cmd_logs ;;
+  destroy)  cmd_validate >/dev/null; with_lock cmd_destroy ;;
+  *)        err "unknown command: $cmd"; usage >&2; exit 2 ;;
+esac

@@ -1,0 +1,4 @@
+bash-course-v2/dist/
+bash-course-v2/build/
+*.zip
+__pycache__/

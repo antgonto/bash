@@ -1,0 +1,55 @@
+.TH LOGSLEUTH 1 "October 2026" "logsleuth 1.0.0" "User Commands"
+.SH NAME
+logsleuth \- analyze web access logs and sshd auth logs
+.SH SYNOPSIS
+.B logsleuth
+[\fB\-c\fR \fIconfig\fR] [\fB\-n\fR \fIN\fR] [\fB\-f\fR \fIfield\fR]
+\fIcommand\fR [\fIFILE\fR]
+.SH DESCRIPTION
+.B logsleuth
+reports on Combined Log Format access logs and sshd authentication logs.
+With no \fIFILE\fR it reads standard input.
+.SH COMMANDS
+.TP
+.B summary
+Request count, unique client IPs, and a status-class breakdown.
+.TP
+.B top
+The most frequent client IPs, or paths/statuses with \fB\-f\fR.
+.TP
+.B errors
+Counts of 4xx and 5xx responses and the worst paths.
+.TP
+.B bruteforce
+Source IPs in an auth log at or above the failed-login threshold.
+Exits 3 if any IP is flagged, so it can gate a pipeline.
+.SH OPTIONS
+.TP
+.B \-c \fIfile\fR
+Read configuration from \fIfile\fR (keys: top_n, brute_threshold).
+.TP
+.B \-n \fIN\fR
+Limit \fBtop\fR and \fBerrors\fR to \fIN\fR rows.
+.TP
+.B \-f \fIfield\fR
+For \fBtop\fR: \fBip\fR, \fBpath\fR, or \fBstatus\fR.
+.SH EXIT STATUS
+.TP
+.B 0
+Success.
+.B 1
+Runtime error (e.g. unreadable file).
+.B 2
+Usage error.
+.B 3
+.B bruteforce
+flagged at least one IP.
+.SH EXAMPLES
+.nf
+logsleuth summary access.log
+logsleuth -n 5 top access.log
+cat access.log | logsleuth errors
+logsleuth bruteforce /var/log/auth.log
+.fi
+.SH AUTHOR
+Written for the Bash Scripting course.

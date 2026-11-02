@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# logsleuth — analyze web access logs and sshd auth logs.
+# A teaching project for the Bash Scripting course, written to production taste:
+# strict mode, a sourced library, getopts, a config file parsed as data, and
+# temp files cleaned up on any exit.
+set -euo pipefail
+
+# Resolve this script's real directory even when invoked through a symlink
+# (install.sh symlinks it onto your PATH), so ../lib is always found.
+SOURCE="${BASH_SOURCE[0]}"
+while [[ -L "$SOURCE" ]]; do
+  _dir="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ "$SOURCE" != /* ]] && SOURCE="$_dir/$SOURCE"
+done
+HERE="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+LIB="$HERE/../lib"
+# shellcheck source=../lib/util.sh
+source "$LIB/util.sh"
+# shellcheck source=../lib/parse.sh
+source "$LIB/parse.sh"
+# shellcheck source=../lib/report.sh
+source "$LIB/report.sh"
+
+# shellcheck disable=SC2154  # rc is assigned inside the trap body
+# Capture the real exit status, clean up, then exit with it — so a command's
+# intended exit code (e.g. bruteforce's 3) is never clobbered by the trap.
+trap 'rc=$?; cleanup; exit "$rc"' EXIT
+
+# config: an explicit $LOGSLEUTH_CONFIG, else the packaged default, else nothing
+CONFIG="${LOGSLEUTH_CONFIG:-$HERE/../etc/logsleuth.conf}"
+load_config "$CONFIG"
+
+usage() {
+  cat <<EOF
+logsleuth $LOGSLEUTH_VERSION — analyze access and auth logs
+
+usage: logsleuth [options] <command> [FILE]
+       cat access.log | logsleuth summary        # reads stdin when FILE is omitted
+
+commands:
+  summary [FILE]       request count, unique IPs, status-class breakdown
+  top     [FILE]       most frequent IPs (or paths/statuses with -f)
+  errors  [FILE]       4xx/5xx counts and the worst paths
+  bruteforce [FILE]    auth.log: source IPs at/above the failed-login threshold
+                       (exit 3 if any IP is flagged — usable in a pipeline)
+  version | help
+
+options:
+  -c FILE   config file (default: $CONFIG)
+  -n N      limit for 'top'/'errors' (default $TOP_N)
+  -f FIELD  for 'top': ip | path | status (default ip)
+  -h        this help
+EOF
+}
+
+# FIELD is read by cmd_top in the sourced report.sh
+# shellcheck disable=SC2034
+FIELD=ip
+# global options come BEFORE the command (POSIX getopts convention)
+while getopts ":c:n:f:hV" opt; do
+  case "$opt" in
+    c) CONFIG="$OPTARG"; load_config "$CONFIG" ;;
+    n) [[ "$OPTARG" =~ ^[0-9]+$ ]] || die "-n needs a number, got '$OPTARG'" 2; TOP_N="$OPTARG" ;;
+    f) FIELD="$OPTARG" ;;
+    h) usage; exit 0 ;;
+    V) printf 'logsleuth %s\n' "$LOGSLEUTH_VERSION"; exit 0 ;;
+    \?) die "unknown option -$OPTARG (try: logsleuth -h)" 2 ;;
+    :)  die "option -$OPTARG needs an argument" 2 ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+cmd="${1:-help}"; [[ $# -gt 0 ]] && shift
+case "$cmd" in
+  summary)           cmd_summary "$@" ;;
+  top)               cmd_top "$@" ;;
+  errors)            cmd_errors "$@" ;;
+  bruteforce|brute)  cmd_bruteforce "$@" ;;
+  version)           printf 'logsleuth %s\n' "$LOGSLEUTH_VERSION" ;;
+  help|-h|--help)    usage ;;
+  *)                 die "unknown command '$cmd' (try: logsleuth help)" 2 ;;
+esac
