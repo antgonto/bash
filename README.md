@@ -15,9 +15,47 @@ The course is split in two folders. Together they make one course.
 | `bash-course-v2/` | The **lessons** (text) and the build tools | What the learner **reads** |
 | `bash-course/` | The **labs**, their graders, the course project, and the proof suite | What the learner **runs** |
 
-The lessons refer to the labs by path, for example `labs/lab5-text-processing/exercise/`.
-When the archives are built, `bash-course/` is copied inside them, so a learner has the lessons
-and the labs side by side.
+## Where the labs are
+
+**In this repository, every lab is under `bash-course/labs/`.** There are no labs inside
+`bash-course-v2/`; that folder holds only the lesson text, which refers to the labs.
+
+**In a built archive, the labs are at `labs/`** at the top of the archive, because the build copies
+the whole `bash-course/` folder into the archive next to the lesson pages. So when a lesson page says
+`labs/lab5-text-processing/exercise/`, that means:
+
+- `bash-course/labs/lab5-text-processing/exercise/` in this repository, and
+- `labs/lab5-text-processing/exercise/` in the archive a learner has.
+
+Which lesson uses which lab:
+
+| Lesson page (in `bash-course-v2/student/`) | Lab folder (in `bash-course/labs/`) | Graded as |
+| --- | --- | --- |
+| `M00-orientation-and-first-script.md` | `lab0-first-script/` | A-01 |
+| `M01-variables-and-parameter-expansion.md` | `lab1-variables/` | A-02 |
+| `M02-conditionals.md` | `lab2-conditionals/` | A-03 |
+| `M03-loops-and-arrays.md` | `lab3-loops-arrays/` | A-04 |
+| `M04-functions-and-libraries.md` | `lab4-functions/` | A-05 |
+| `M05-text-pipelines.md` | `lab5-text-processing/` | A-06 |
+| `M06-command-line-and-getopts.md` | `lab6-arguments/` | A-07 |
+| `M07-robustness.md` | `lab7-robustness/` | A-08 |
+| `M08-testing-and-quality.md` | `lab8-testing/` | A-09 |
+| `A10-integrative-practical-mytool.md` | `capstone/` | A-10 |
+| `M09-infrastructure-from-bash.md` | `lab9-stackctl/` | LAB-09a/b/c |
+| `CAP01-capstone-stackctl.md` | `lab9-stackctl/` (the learner's finished `stackctl`, run live) | CAP-01 |
+
+Every lab folder has the same layout:
+
+```
+bash-course/labs/lab5-text-processing/
+├── lab.sh                  the module's demonstration: run it and watch the concepts work
+└── exercise/
+    ├── TASK.md             the graded exercise
+    ├── grade.sh            the grader
+    ├── starter/            the files with # TODOs
+    ├── work/               created by grade.sh on first run — this is where the learner edits
+    └── solution/           the reference solution (trainer archive only)
+```
 
 ---
 
@@ -27,7 +65,8 @@ You should be using a zip archive, not this repository. Inside the archive:
 
 1. Open `README-STUDENT.md`.
 2. Follow the pages in `student/` in order: `M00`, `M01` … `M08`, `A10`, `M09`, `CAP01`.
-3. Each page has a lab. Labs live in `labs/`. For example, module 5 uses `labs/lab5-text-processing/`:
+3. Each page has a lab. In the archive the labs are in `labs/` (the table above says which lab
+   belongs to which page). For example, module 5 uses `labs/lab5-text-processing/`:
 
 ```bash
 bash tools-check.sh                             # 1. Is my shell ready?
@@ -74,7 +113,8 @@ python3 tools/merge_trainer.py student/M05-text-pipelines.md trainer/callouts/M0
 
 ### Changing a lab
 
-Change these four things together, in `bash-course/labs/<lab>/exercise/`:
+Labs are in `bash-course/labs/` (see the table above). Change these four things together, in
+`bash-course/labs/<lab>/exercise/`:
 `starter/` (what the learner gets), `solution/` (the answer), `grade.sh` (the grader), and the
 matching page in `bash-course-v2/student/`. Then prove it:
 
