@@ -5,7 +5,8 @@
 #   bash tools/package-all.sh                              # master + the three platform editions
 #
 # Student archive: student pages, env, labs (without solutions and the capstone walkthrough),
-#                  logsleuth, seed, program, tools-check.sh, grade-all.sh, README-STUDENT.md as README.md.
+#                  logsleuth, seed, program, manuals/student (PDF lab manuals), tools-check.sh, grade-all.sh,
+#                  README-STUDENT.md as README.md.
 # Trainer archive: everything in the tree.
 set -euo pipefail
 ROOT="${ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"; ROOT="$(cd "$ROOT" && pwd)"
@@ -25,6 +26,7 @@ echo "== student =="
 S="$stage/bash-course-student$SUFFIX"; mkdir -p "$S"
 cp -r "$ROOT/student" "$ROOT/env" "$ROOT/labs" "$ROOT/logsleuth" "$ROOT/seed" "$ROOT/program" \
       "$ROOT/tools-check.sh" "$ROOT/grade-all.sh" "$S/"
+mkdir -p "$S/manuals"; cp -r "$ROOT/manuals/student" "$S/manuals/"     # the student lab manuals (PDF)
 cp "$ROOT/README-STUDENT.md" "$S/README.md"
 [[ -f "$ROOT/EDITION.txt" ]] && cp "$ROOT/EDITION.txt" "$S/"
 rm -rf "$S"/labs/*/exercise/solution "$S/labs/capstone/lab.sh"

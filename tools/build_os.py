@@ -32,7 +32,7 @@ EDITIONS = {
 }
 COPY = ["student", "trainer", "env", "README-STUDENT.md", "README-TRAINER.md",
         "BLUEPRINT.md", "CONTINUATION-MANIFEST.md", "tools",
-        "labs", "logsleuth", "seed", "program", "tools-check.sh", "grade-all.sh", "prove_all.sh"]
+        "labs", "logsleuth", "seed", "program", "manuals", "tools-check.sh", "grade-all.sh", "prove_all.sh"]
 MARK = re.compile(r"^<!-- os:([a-z ]+?) -->\n(.*?)^<!-- /os -->\n", re.S | re.M)
 INLINE = re.compile(r"<!-- os:([a-z ]+?) -->(.*?)<!-- /os -->", re.S)
 

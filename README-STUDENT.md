@@ -22,6 +22,7 @@ you write, `stackctl`.
 | `env/` | The course Docker image (`Dockerfile`) and the step-by-step setup guide (`README.md`). |
 | `labs/lab0-first-script/` … `labs/lab8-testing/` | One lab per module M00–M08. |
 | `labs/capstone/` | The A-10 integrative practical (`mytool`). |
+| `manuals/student/` | A printable PDF manual for every lab: topology, steps with expected output, what to do when something differs, the reflection questions and the rubric. |
 | `labs/lab9-stackctl/` | The M09 lab and the CAP-01 capstone (`stackctl`). Its `starter/app/` is the program's fraud-clf API, unchanged — you operate it, you do not edit it. |
 | `logsleuth/` | The finished `logsleuth` tool. The lessons take it apart; it is course material, not an answer key. |
 | `program/` | Real scripts from Course 1 and Course 2, copied here read-only so some lessons can say "open the real thing". Do not edit them. |

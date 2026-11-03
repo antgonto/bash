@@ -13,6 +13,7 @@ reach a student-visible area. Read `README-STUDENT.md` for the learner's view of
 | `trainer/CAP01-capstone-stackctl.md` | Includes the CAP-01R fault list F1–F9 with injection commands and solutions. |
 | `labs/*/exercise/solution/` | The reference solution of every lab (the grader passes 100 % on it). |
 | `labs/capstone/lab.sh` | The A-10-scope walkthrough. |
+| `manuals/instructor/` | The instructor version of every lab manual (PDF): the student text plus, in gray boxes, instructor notes, model answers with level descriptors, the grading procedure, acceptable variations and the reference solution. Hand learners only `manuals/student/`. |
 | `prove_all.sh` | Runs every demonstration, every grader on its starter and its solution, the `logsleuth` suite and the shellcheck gate. Must end with `ALL GREEN`. |
 | `BLUEPRINT.md` | The course design: parameters, skills model, traceability, course map, assessment plan, capstone contract, quality gates, open verification tasks. |
 | `CONTINUATION-MANIFEST.md` | The logbook: every change, decision and correction, and the Notion page IDs. Read it first when maintaining the course. |

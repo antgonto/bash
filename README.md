@@ -24,6 +24,7 @@ Moodle; this repository is where it is edited and where it runs.
 .
 ├── student/                  the twelve lesson pages — read these in order
 ├── labs/                     one folder per lab: demonstration, exercise, grader, solution
+├── manuals/                  printable lab manuals (PDF): student/ for learners, instructor/ for trainers, src/ is their source
 ├── logsleuth/                the course project, finished
 ├── env/                      the course Docker image and the step-by-step installation guide
 ├── program/                  real Course 1 / Course 2 scripts, read-only, for "read the real thing" exercises
@@ -55,6 +56,12 @@ Each lesson page has one lab:
 | `A10-integrative-practical-mytool.md` | `capstone/` | A-10 |
 | `M09-infrastructure-from-bash.md` | `lab9-stackctl/` | LAB-09a/b/c |
 | `CAP01-capstone-stackctl.md` | `lab9-stackctl/` (your finished `stackctl`, run live) | CAP-01 |
+
+Every lab also has a printable manual in `manuals/`, in the layout of a networking-academy lab guide
+(topology, environment table, objectives, background, numbered parts and steps with expected output, a
+symptom table, reflection questions, hand-in and rubric). `manuals/student/<lab>.pdf` is the learner's
+copy; `manuals/instructor/<lab>-instructor.pdf` adds, in gray boxes, the instructor notes, the model
+answers, the grading procedure and the reference solution.
 
 Every lab folder has the same layout:
 
@@ -140,6 +147,7 @@ on each platform. M09 and the capstone need Docker.
    ```
 
 4. `bash grade-all.sh` from the course folder shows the status of every lab.
+5. If you prefer a printed guide, each lab's manual is in `manuals/student/`.
 
 Every page tells you what to type, what you will see (outputs marked **observed** were produced by
 the authors; outputs marked **designed** need a running Docker daemon and are confirmed by your own
@@ -154,6 +162,7 @@ Everything a learner has, plus:
   descriptors (Not met / Met / Strong), worked scoring, calibration samples, remediation and an
   equivalent reassessment, and the answers to the knowledge checks.
 - `labs/*/exercise/solution/` — the reference solution of every lab.
+- `manuals/instructor/` — the instructor version of every lab manual (model answers, grading, solution).
 - `trainer/a10r/` — the A-10R reassessment kit.
 - `prove_all.sh` — run it before a cohort; it must end with `ALL GREEN`.
 - `BLUEPRINT.md` — the course design and the verification tasks still open (V-01…V-05).
@@ -176,6 +185,14 @@ python3 tools/merge_trainer.py student/M05-text-pipelines.md trainer/callouts/M0
 
 ```bash
 bash prove_all.sh                               # must end with: ALL GREEN
+```
+
+**Change a lab manual.** Edit `manuals/src/<lab>.md` (student and instructor text in one file;
+`:::instructor … :::` and `:::answer … :::` blocks appear only in the instructor PDF), then rebuild:
+
+```bash
+python3 tools/build_manuals.py            # all manuals → manuals/student/ and manuals/instructor/
+python3 tools/build_manuals.py lab5       # one of them
 ```
 
 **Record the change** in `CONTINUATION-MANIFEST.md`, then republish the changed Notion pages (the
